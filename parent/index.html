@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Parent</title>
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 18px;
+      }
+
+      .wrapper {
+        display: flex;
+        height: 95vh;
+      }
+
+      .parent {
+        margin: 1rem;
+        padding: 1rem;
+        border: solid 1px lightblue;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .child {
+        flex: 1;
+      }
+
+      h1 {
+        font-size: 1.5rem;
+      }
+
+      div {
+        margin: 1rem 0;
+        max-width: 100%;
+      }
+
+      form {
+        background-color: lightblue;
+        padding: 1rem;
+      }
+
+      .input-wrapper {
+        margin: 0;
+        display: flex;
+      }
+
+      input {
+        padding: .25rem;
+        flex: 1;
+        margin-right: .5rem;
+        border: solid 1px #69c;
+      }
+
+      button {
+        border: solid 1px #ccc;
+        padding: .3rem 1rem;
+      }
+
+      .panel {
+        padding: 1rem;
+        line-height: 1.25rem;
+        flex: 1;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        justify-content: flex-end;
+      }
+
+      iframe {
+        border: solid 1px sandybrown;
+        height: 100%;
+        width: 100%;
+        margin: auto;
+      }
+
+      pre {
+        font-family: 'Courier New', Courier, monospace;
+      }
+      .received {
+        position: relative;
+        background-color: sandybrown;
+        padding: 0.25rem 0.5rem;
+        border-radius: 0.25rem;
+        width: 75%;
+        margin: .5rem;
+      }
+
+      .received::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -4px;
+        height: 16px;
+        width: 16px;
+        background-color: sandybrown;
+        transform: skewX(45deg);
+        z-index: -1;
+      }
+
+      .sent {
+        position: relative;
+        background-color: lightblue;
+        padding: 0.25rem 0.5rem;
+        border-radius: 0.25rem;
+        width: 60%;
+        margin: .5rem;
+        margin-left: 40%;
+      }
+      .sent::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: -4px;
+        height: 16px;
+        width: 16px;
+        background-color: lightblue;
+        transform: skewX(-45deg);
+        z-index: -1;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrapper">
+      <div class="parent">
+        <h1>Página embebedora</h1>
+        <p>Contiene al Player Embebido</p>
+        <div id="to-child">
+          <form>
+            <label for="message">Mensaje</label><br />
+            <div class="input-wrapper">
+            <input type="text" name="message" id="message" autocomplete="off" />
+            <button type="submit" id="send-button">Enviar al hijo</button>
+            </div>
+          </form>
+        </div>
+        <p>Los mensajes recibidos del hijo se mostrarán aquí:</p>
+        <div class="panel" id="msg-panel"></div>
+      </div>
+      <div class="child" id="child-doc"></div>
+    </div>
+    <script>
+      const panel = document.getElementById('msg-panel');
+      const msgBox = document.getElementById('message');
+      const sendButton = document.getElementById('send-button');
+      const player = initChild('http://localhost:3000/child/?step=3');
+      const origin = 'http://localhost:3000';
+      let currentStep = 1;
+
+      window.addEventListener('message', (e) => {
+        if (!e.data) {
+          return;
+        }
+        currentStep = e.data.step;
+        panel.innerHTML += `<p class="received">${currentStep}: ${e.data.message}</p>`;
+      });
+
+      sendButton.addEventListener('click', (e) => {
+        e.preventDefault();
+        sendMessage(msgBox.value);
+        msgBox.value = '';
+      });
+
+      function initChild(src) {
+        iframe = document.createElement('iframe');
+        iframe.setAttribute('src', src);
+        iframe.setAttribute('id', 'player');
+        // document.body.appendChild(iframe);
+        document.getElementById('child-doc').appendChild(iframe);
+        return iframe;
+      }
+
+      function sendMessage(msg) {
+        currentStep++;
+        player.contentWindow.postMessage({ step: currentStep, message: msg}, origin);
+        panel.innerHTML += `<p class="sent">${currentStep}: ${msg}</p>`;
+      }
+    </script>
+  </body>
+</html>

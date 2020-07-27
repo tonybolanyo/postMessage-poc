@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Child</title>
+    <link rel="stylesheet" href="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" />
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 18px;
+      }
+
+      body {
+        margin: 0;
+        padding: 0.785rem 1rem 1rem 1rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        height: 100vh;
+      }
+
+      h1 {
+        font-size: 1.5rem;
+      }
+
+      div {
+        margin: 1rem 0;
+        max-width: 100%;
+      }
+
+      .to-parent {
+        border: solid 1px lightgoldenrodyellow;
+        padding: 1px;
+      }
+
+      form {
+        background-color: lightgray;
+        padding: 1rem;
+      }
+
+      .panel {
+        padding: 1rem;
+        line-height: 1.25rem;
+        flex-basis: 100%;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        justify-content: flex-end;
+      }
+
+      pre {
+        font-family: 'Courier New', Courier, monospace;
+      }
+
+      button {
+        all: unset;
+        background-color: #eee;
+        padding: 1rem 2rem;
+        margin: 0.5rem;
+        color: #333;
+      }
+
+      button [class*='ion-']::before {
+        font-size: 1.5rem;
+      }
+
+      .received {
+        position: relative;
+        background-color: lightblue;
+        padding: 0.25rem 0.5rem;
+        border-radius: 0.25rem;
+        width: 75%;
+        margin: .5rem;
+      }
+
+      .received::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -4px;
+        height: 16px;
+        width: 16px;
+        background-color: lightblue;
+        transform: skewX(45deg);
+        z-index: -1;
+      }
+
+      .sent {
+        position: relative;
+        background-color: sandybrown;
+        padding: 0.25rem 0.5rem;
+        border-radius: 0.25rem;
+        width: 60%;
+        margin: .5rem;
+        margin-left: 40%;
+      }
+      .sent::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: -4px;
+        height: 16px;
+        width: 16px;
+        background-color: sandybrown;
+        transform: skewX(-45deg);
+        z-index: -1;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Player embebido</h1>
+    <p>Esta ventana ejerce de Player Embebido</p>
+    <div id="to-parent" class="to-parent">
+      <button id="btn-play" class="player-button" message="play"><i class="ion-play"></i></button>
+      <button id="btn-pause" class="player-button" message="pause"><i class="ion-pause"></i></button>
+      <button id="btn-stop" class="player-button" message="stop"><i class="ion-stop"></i></button>
+      <button id="btn-fwd" class="player-button" message="forward"><i class="ion-skip-forward"></i></button>
+      <button id="btn-bwd" class="player-button" message="backward"><i class="ion-skip-backward"></i></button>
+    </div>
+    <p>Los mensajes del padre se mostrarán aquí:</p>
+    <div class="panel" id="msg-panel"></div>
+    <script>
+      const panel = document.getElementById('msg-panel');
+      const msgBox = document.getElementById('message');
+      const sendButton = document.getElementById('send-button');
+      const buttons = document.querySelectorAll('.player-button');
+      const origin = 'http://localhost:3000';
+      let pingActive;
+      let currentStep = 0;
+
+      window.addEventListener('message', (e) => {
+        if (!e.data) {
+          return;
+        }
+        currentStep = e.data.step;
+        panel.innerHTML += `<p class="received">${currentStep}: ${e.data.message}</p>`;
+      });
+
+      buttons.forEach((btn) => {
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+          const msg = e.currentTarget.getAttribute('message');
+          const id = e.currentTarget.getAttribute('id');
+          if (id === 'btn-play') {
+            pingActive = setInterval(pingTracking, 2000);
+          }
+          if ((id === 'btn-stop' || id === 'btn-pause') && pingActive) {
+            clearInterval(pingActive);
+          }
+
+          sendMessage(msg);
+        });
+      });
+
+      let qs = new URLSearchParams(document.location.search);
+      currentStep = parseInt(qs.get('step')) || 1;
+      sendMessage('player loaded');
+
+      function pingTracking() {
+        sendMessage('ping');
+      }
+
+      function sendMessage(msg) {
+        currentStep++;
+        window.parent.postMessage({ step: currentStep, message: msg}, origin);
+        panel.innerHTML += `<p class="sent">${currentStep}: ${msg}</p>`;
+      }
+    </script>
+  </body>
+</html>
