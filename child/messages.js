@@ -1,9 +1,34 @@
-const origin = 'https://ll-embedding.netlify.app';
+const allowedOrigins = [
+  { clientId=1111, origin='https://ll-embedding.netlify.app' },
+  { clientId=2222, origin='https://tonygb.com' },
+  { clientId=3333, origin='https://polimeralia.com' },
+  { clientId=3000, origin='http://localhost:3000' },
+]
 
 const panel = document.getElementById('msg-panel');
 const msgBox = document.getElementById('message');
 const sendButton = document.getElementById('send-button');
 const buttons = document.querySelectorAll('.player-button');
+const qs = new URLSearchParams(document.location.search);
+
+const clientId = qs.get('h');
+
+try {
+  if (!clientId) {
+    console.error('You can not embed this player');
+    return;
+  }
+
+  const origin = allowedOrigins.find(item => item.clientId === clientId)[0];
+
+  if (origin !== window.origin) {
+    console.error('You are not allowed to embed this player');
+    return;
+  }
+} catch (error) {
+  console.error('Error verifying parent to embed');
+  return;
+}
 
 let pingActive;
 let currentStep = 0;
@@ -41,7 +66,6 @@ buttons.forEach((btn) => {
   });
 });
 
-let qs = new URLSearchParams(document.location.search);
 currentStep = parseInt(qs.get('step')) || 1;
 sendMessage('player loaded');
 

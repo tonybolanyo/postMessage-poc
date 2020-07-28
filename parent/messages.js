@@ -1,10 +1,11 @@
 const origin = 'https://ll-player.netlify.app';
 const initStep = 3;
+const clientId = 1111;
 
 const panel = document.getElementById('msg-panel');
 const msgBox = document.getElementById('message');
 const sendButton = document.getElementById('send-button');
-const player = initChild(`${origin}?step=${initStep}`);
+const player = initChild(`${origin}?h=${clientId}&step=${initStep}`);
 
 let currentStep = 1;
 
