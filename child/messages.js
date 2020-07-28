@@ -23,7 +23,7 @@ console.log('[CHILD] document.referrer', document.referrer);
 
 const origin = allowedOrigins.filter((item) => item.clientId === clientId)[0];
 
-if (origin !== window.origin) {
+if (origin !== document.referrer) {
   throw 'You are not allowed to embed this player';
 }
 
