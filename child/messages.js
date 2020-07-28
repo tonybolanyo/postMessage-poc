@@ -18,7 +18,7 @@ if (!clientId) {
 }
 
 debugger;
-const origin = allowedOrigins.filter((item) => item.clientId === clientId)[0];
+const origin = allowedOrigins.filter((item) => item.clientId === clientId)[0].origin;
 
 console.log('[CHILD] window.origin', window.origin);
 console.log('[CHILD] document.origin', document.origin);
