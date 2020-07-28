@@ -11,7 +11,7 @@ const sendButton = document.getElementById('send-button');
 const buttons = document.querySelectorAll('.player-button');
 const qs = new URLSearchParams(document.location.search);
 
-const clientId = qs.get('h');
+const clientId = parseInt(qs.get('h'));
 
 if (!clientId) {
   throw 'You can not embed this player';
