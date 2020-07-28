@@ -13,6 +13,7 @@ window.addEventListener('message', (e) => {
   console.log('Message origin:', e.origin);
   console.log('Message source:', e.source);
   console.log('Message data:', e.data);
+  console.log(e);
   if (e.origin !== origin || !e.data) {
     return;
   }
