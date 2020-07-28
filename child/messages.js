@@ -17,6 +17,10 @@ if (!clientId) {
   throw 'You can not embed this player';
 }
 
+console.log('[CHILD] window.origin', window.origin);
+console.log('[CHILD] document.origin', document.origin);
+console.log('[CHILD] document.referrer', document.referrer);
+
 const origin = allowedOrigins.filter((item) => item.clientId === clientId)[0];
 
 if (origin !== window.origin) {
@@ -25,10 +29,6 @@ if (origin !== window.origin) {
 
 let pingActive;
 let currentStep = 0;
-
-console.log('[CHILD] window.origin', window.origin);
-console.log('[CHILD] document.origin', document.origin);
-console.log('[CHILD] document.referrer', document.referrer);
 
 window.addEventListener('message', (e) => {
   console.log('[CHILD] Accepted origin:', origin);
