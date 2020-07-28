@@ -17,7 +17,6 @@ if (!clientId) {
   throw 'You can not embed this player';
 }
 
-debugger;
 const origin = allowedOrigins.filter((item) => item.clientId === clientId)[0].origin;
 
 console.log('[CHILD] window.origin', window.origin);
