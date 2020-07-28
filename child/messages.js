@@ -13,18 +13,14 @@ const qs = new URLSearchParams(document.location.search);
 
 const clientId = qs.get('h');
 
-try {
-  if (!clientId) {
-    throw 'You can not embed this player';
-  }
+if (!clientId) {
+  throw 'You can not embed this player';
+}
 
-  const origin = allowedOrigins.find((item) => item.clientId === clientId)[0];
+const origin = allowedOrigins.find((item) => item.clientId === clientId)[0];
 
-  if (origin !== window.origin) {
-    throw 'You are not allowed to embed this player';
-  }
-} catch (error) {
-  throw 'Error verifying parent to embed';
+if (origin !== window.origin) {
+  throw 'You are not allowed to embed this player';
 }
 
 let pingActive;
