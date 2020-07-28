@@ -25,7 +25,7 @@ console.log('[CHILD] document.referrer', document.referrer);
 console.log('[CHILD] client ID', clientId);
 console.log('[CHILD] allowed origins', origin);
 
-if (origin !== document.referrer.replace(/\/+$/, '')) {
+if (!document.referrer.startsWith(origin)) {
   throw 'You are not allowed to embed this player';
 }
 
