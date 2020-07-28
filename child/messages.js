@@ -15,19 +15,16 @@ const clientId = qs.get('h');
 
 try {
   if (!clientId) {
-    console.error('You can not embed this player');
-    return;
+    throw 'You can not embed this player';
   }
 
   const origin = allowedOrigins.find((item) => item.clientId === clientId)[0];
 
   if (origin !== window.origin) {
-    console.error('You are not allowed to embed this player');
-    return;
+    throw 'You are not allowed to embed this player';
   }
 } catch (error) {
-  console.error('Error verifying parent to embed');
-  return;
+  throw 'Error verifying parent to embed';
 }
 
 let pingActive;
