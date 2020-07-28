@@ -17,7 +17,7 @@ if (!clientId) {
   throw 'You can not embed this player';
 }
 
-const origin = allowedOrigins.find((item) => item.clientId === clientId)[0];
+const origin = allowedOrigins.filter((item) => item.clientId === clientId)[0];
 
 if (origin !== window.origin) {
   throw 'You are not allowed to embed this player';
