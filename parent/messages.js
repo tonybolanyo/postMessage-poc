@@ -8,11 +8,16 @@ const player = initChild(`${origin}?step=${initStep}`);
 
 let currentStep = 1;
 
+console.log('[PARENT] window.origin', window.origin);
+console.log('[PARENT] document.origin', document.origin);
+console.log('[PARENT] document.referrer', document.referrer);
+
 window.addEventListener('message', (e) => {
-  console.log('Accepted origin:', origin);
-  console.log('Message origin:', e.origin);
-  console.log('Message source:', e.source);
-  console.log('Message data:', e.data);
+  console.log('[PARENT] Accepted origin:', origin);
+  console.log('[PARENT] Message origin:', e.origin);
+  console.log('[PARENT] Message source:', e.source);
+  console.log('[PARENT] Message data:', e.data);
+  console.log('[PARENT]', e);
   if (e.origin !== origin || !e.data) {
     return;
   }

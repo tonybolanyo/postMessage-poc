@@ -8,12 +8,16 @@ const buttons = document.querySelectorAll('.player-button');
 let pingActive;
 let currentStep = 0;
 
+console.log('[CHILD] window.origin', window.origin);
+console.log('[CHILD] document.origin', document.origin);
+console.log('[CHILD] document.referrer', document.referrer);
+
 window.addEventListener('message', (e) => {
-  console.log('Accepted origin:', origin);
-  console.log('Message origin:', e.origin);
-  console.log('Message source:', e.source);
-  console.log('Message data:', e.data);
-  console.log(e);
+  console.log('[CHILD] Accepted origin:', origin);
+  console.log('[CHILD] Message origin:', e.origin);
+  console.log('[CHILD] Message source:', e.source);
+  console.log('[CHILD] Message data:', e.data);
+  console.log('[CHILD]', e);
   if (e.origin !== origin || !e.data) {
     return;
   }
