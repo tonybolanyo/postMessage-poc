@@ -17,11 +17,13 @@ if (!clientId) {
   throw 'You can not embed this player';
 }
 
+const origin = allowedOrigins.filter((item) => item.clientId === clientId)[0];
+
 console.log('[CHILD] window.origin', window.origin);
 console.log('[CHILD] document.origin', document.origin);
 console.log('[CHILD] document.referrer', document.referrer);
-
-const origin = allowedOrigins.filter((item) => item.clientId === clientId)[0];
+console.log('[CHILD] client ID', clientId);
+console.log('[CHILD] allowed origins', origin);
 
 if (origin !== document.referrer) {
   throw 'You are not allowed to embed this player';
